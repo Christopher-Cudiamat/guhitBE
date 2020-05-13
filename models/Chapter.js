@@ -9,23 +9,22 @@ const ChaptersSchema = new mongoose.Schema({
   chapterCover:{
     type: String
   },
-  chapterBanner: {
-    type: String
-  },
-  chapterBanner: {
-    type: String
-  },
   chapterPages: {
     type: [String],
   },
-  chapterUrl: {
+  chapterTitle: {
     type: String,
   },
   chapterDateCreated: {
-    type: Date,
+    type: String, 
+  },
+  chapterDateUpdated: {
+    type: String, 
+    default: ""
   },
   chapterNumber: {
     type: Number,
+    default: 1
   },
   chapterDescription: {
     type: String,
@@ -37,9 +36,17 @@ const ChaptersSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  matureContents: {
+    type: Boolean,
+    default: false
+  },
+  openForComments: {
+    type: Boolean,
+    default: false
+  },
  
 
 });
 
 
-module.exports = Chapters = mongoose.model('chapter', ChaptersSchema);
+module.exports = Chapter = mongoose.model('chapter', ChaptersSchema);

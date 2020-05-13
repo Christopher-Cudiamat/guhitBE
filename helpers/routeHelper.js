@@ -47,7 +47,18 @@ module.exports = {
       tags: Joi.string(),
       consent: Joi.string(),
       condition: Joi.string(),
-
+    }),
+    chapterSchema: Joi.object({
+      chapterTitle: Joi.string(),
+      chapterCover: Joi.string(),
+      chapterPages: Joi.string(),
+      chapterUrl: Joi.string(),
+      chapterNumber: Joi.string(),
+      chapterDescription: Joi.string(),
+      tags: Joi.string(),
+      chapterLikes: Joi.string(),
+      matureContents: Joi.string(),
+      openForComments: Joi.string(),
     }),
   }
 }
