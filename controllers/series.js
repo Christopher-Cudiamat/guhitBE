@@ -1,5 +1,6 @@
 const Series = require('../models/Series');
 const User = require('../models/User');
+const {formatedNewDate} = require('../helpers/dateFormat');
 
 
 
@@ -49,11 +50,8 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST MY SERIES////////////////////////////////////////////////
   postCreateSeries: async(req, res, next) => {
-    // console.log("POST MY SERIES--------->",req.value.body);
-    // console.log("IMAGE COVER------>", req.files.seriesCover[0].path);
-    // console.log("USER ID--------->",req.user.id);
- 
-    const seriesDateCreated = new Date();
+    let count = 0;
+    const seriesDateCreated = formatedNewDate();
     const strTags = req.value.body.tags;
     const tags = strTags.split(",");
     const seriesCover = req.files.seriesCover[0].path;
@@ -88,8 +86,7 @@ module.exports = {
     if(tags) seriesFields.tags = tags.toString().split(',').map(tool => tool.trim());
 
     try {
-      
-    
+        
       let series = await Series.findOne({user: req.user.id, seriesTitle: req.value.body.seriesTitle});
 
       if(series && isEditSeries) {

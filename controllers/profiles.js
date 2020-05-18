@@ -1,6 +1,8 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const Series = require('../models/Series');
 
+const {formatedNewDate} = require('../helpers/dateFormat');
 
 module.exports = {
 
@@ -37,9 +39,11 @@ module.exports = {
     const profileFields = {};
 
     profileFields.user = user;
+
     if(displayName) profileFields.displayName = displayName;
     if(profilePic) profileFields.profilePic = profilePic;
 
+    console.log(profileFields);
     try {
 
       //CREATE ONE IF NO EXISTING PROFILE
@@ -61,15 +65,9 @@ module.exports = {
   postProfile: async(req, res, next) => {
 
     const profilePic = req.file.path;
-    const isCreator = true;
-    // const joinedDate = new Date();
-    
-    const d = new Date();
-    const dtf = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }) 
-    const [{ value: mo },,{ value: da },,{ value: ye }] = dtf.formatToParts(d) 
   
-    const joinedDate = `${da}-${mo}-${ye}`;
-    const strTools = req.value.body.tools
+    const joinedDate = formatedNewDate();
+    const strTools = req.value.body.tools;
     const tools = strTools.split(",");
 
     const {
@@ -84,12 +82,14 @@ module.exports = {
     const profileFields = {};
 
     profileFields.user = req.user.id;
+    profileFields.seriesMade = req.user.id;
+    
 
     if(profilePic) profileFields.profilePic = profilePic;
     if(displayName) profileFields.displayName = displayName;
     if(city) profileFields.city = city;
     if(description) profileFields.description = description;
-    if(isCreator) profileFields.isCreator = isCreator;
+    // if(isCreator) profileFields.isCreator = isCreator;
     if(patreon) profileFields.patreon = patreon;
     if(joinedDate) profileFields.joinedDate = joinedDate;
     if(tools) {
@@ -105,6 +105,7 @@ module.exports = {
       if(profile) {
         let profile = await Profile.findOneAndUpdate(
           {user: req.user.id},
+          // {seriesMade: req.user.id},
           {$set: profileFields},
           {new: true}
         );

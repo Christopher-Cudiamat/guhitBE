@@ -9,9 +9,18 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////GET ALL MY SERIES////////////////////////////////////////////////
   getAllMyChapters: async(req, res, next) => {
-    console.log("GET ALL MY CHAPTERS");
+    console.log("REQUEST PARAMS", req.param);
+    console.log("REQUEST QUERY", req.query.title);
+ 
     try {
-  
+
+      const chapter = await Chapter.find({user: req.user.id, seriesTitle:req.query.title}).populate('user',['email']);
+
+      if(!chapter) {
+        return res.status(400).json({msg: 'There is no series created by this user'})
+      }
+
+      res.json(chapter);
     } catch (error) {
   
       res.status(500).send('Server Error');
@@ -39,7 +48,9 @@ module.exports = {
   ////POST MY SERIES////////////////////////////////////////////////
   postCreateChapter: async(req, res, next) => {
 
-    const isEditChapter = true;
+    const isEditChapter = false;
+
+    const seriesTitle = req.value.body.seriesTitle;
   
     const chapterDateCreated = formatedNewDate();
     const chapterDateUpdated = formatedNewDate();
@@ -49,8 +60,6 @@ module.exports = {
     const chapterPages = req.files.chapterPages.map(file => file.path);
     const matureContents= req.value.body.matureContents === "true" ? true:false;
     const openForComments = req.value.body.openForComments === "true" ? true:false;
-
-    
 
     const {
       chapterTitle,
@@ -68,6 +77,8 @@ module.exports = {
     if(chapterDateUpdated && isEditChapter) chapterFields.chapterDateUpdated = chapterDateUpdated;
     if(chapterDescription) chapterFields.chapterDescription = chapterDescription;
     if(tags) chapterFields.tags = tags.toString().split(',').map(tool => tool.trim());
+
+    chapterFields.seriesTitle = seriesTitle;
     chapterFields.matureContents = matureContents;
     chapterFields.openForComments = openForComments;
 

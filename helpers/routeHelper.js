@@ -31,8 +31,6 @@ module.exports = {
       displayName: Joi.string(),
       city: Joi.string(),
       description: Joi.string(),
-      joinedDate: Joi.date(),
-      isCreator: Joi.boolean(),
       patreon: Joi.string().optional(),
       tools: Joi.string(),
       // tools: Joi.array().items(Joi.string()).optional(),
@@ -59,6 +57,7 @@ module.exports = {
       chapterLikes: Joi.string(),
       matureContents: Joi.string(),
       openForComments: Joi.string(),
+      seriesTitle: Joi.string(),
     }),
   }
 }
