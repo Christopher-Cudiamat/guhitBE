@@ -6,6 +6,9 @@ const SeriesSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:'user'
   },
+  // seriesId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  // },
   seriesCover:{
     type: String
   },
@@ -41,6 +44,7 @@ const SeriesSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+
   
  
 

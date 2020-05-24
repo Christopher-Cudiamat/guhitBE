@@ -9,12 +9,12 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////GET ALL MY SERIES////////////////////////////////////////////////
   getAllMyChapters: async(req, res, next) => {
-    console.log("REQUEST PARAMS", req.param);
-    console.log("REQUEST QUERY", req.query.title);
+    console.log("REQUEST PARAMS", req.param.id);
+    console.log("REQUEST QUERY", req.query.id);
  
     try {
-
-      const chapter = await Chapter.find({user: req.user.id, seriesTitle:req.query.title}).populate('user',['email']);
+      
+      const chapter = await Chapter.find({user: req.user.id, seriesId:req.query.id}).populate('user',['email']);
 
       if(!chapter) {
         return res.status(400).json({msg: 'There is no series created by this user'})
@@ -50,7 +50,8 @@ module.exports = {
 
     const isEditChapter = false;
 
-    const seriesTitle = req.value.body.seriesTitle;
+
+    const seriesId= req.value.body.seriesId;
   
     const chapterDateCreated = formatedNewDate();
     const chapterDateUpdated = formatedNewDate();
@@ -78,7 +79,7 @@ module.exports = {
     if(chapterDescription) chapterFields.chapterDescription = chapterDescription;
     if(tags) chapterFields.tags = tags.toString().split(',').map(tool => tool.trim());
 
-    chapterFields.seriesTitle = seriesTitle;
+    chapterFields.seriesId = seriesId;
     chapterFields.matureContents = matureContents;
     chapterFields.openForComments = openForComments;
 

@@ -6,7 +6,7 @@ const ChaptersSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:'user'
   },
-  seriesTitle:{
+  seriesId:{
     type: String
   },
   chapterCover:{
