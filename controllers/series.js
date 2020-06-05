@@ -1,4 +1,6 @@
 const Series = require('../models/Series');
+const Chapters = require('../models/Chapter');
+const Profile = require('../models/Profile');
 const User = require('../models/User');
 const {formatedNewDate} = require('../helpers/dateFormat');
 
@@ -91,7 +93,18 @@ module.exports = {
         
       if(req.value.body.isNewSeries !== "isNewSeries"){
         let series = await Series.findOne({user: req.user.id, _id: req.value.body.isNewSeries});
-        // let series = await Series.findOne({user: req.user.id});
+        // let profile = await Profile.findOne({user: req.user.id});
+        // console.log("PROFILE",profile);
+
+        // if(profile) {
+        //   let profile = await Profile.findOneAndUpdate(
+        //     {user: req.user.id},
+        //     {seriesMade: profile.seriesMade.push("push")},
+        //     {new: true}
+        //   );
+  
+        //   return res.json(profile);
+        // }
 
         if(series) {
           let series = await Series.findOneAndUpdate(
@@ -99,7 +112,6 @@ module.exports = {
             {$set: seriesFields},
             {new: true}
           );
-  
           return res.json(series);
         }
       }
@@ -117,5 +129,25 @@ module.exports = {
       res.status(500).send('Server Error');
     }
   },
+
+
+    ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
+  ////DELETE A SPECIEFIC SERIES////////////////////////////////////////////////
+  deleteSeries: async(req, res, next) => {
+    console.log("DELETE SERIES"); 
+    console.log("QUERY ID",req.query.id); 
+
+    try {
+      await Series.findOneAndRemove({user: req.user.id,_id:req.query.id});
+      await Chapters.deleteMany({user: req.user.id,seriesId:req.query.id});
+
+      res.json({msg: 'series is deleted'});
+    } catch (error) {
+  
+      res.status(500).send('Server Error');
+    }
+  },
+
 
 }

@@ -81,7 +81,7 @@ module.exports = {
     const profileFields = {};
 
     profileFields.user = req.user.id;
-    profileFields.seriesMade = req.user.id;
+    profileFields.seriesMade = [];
     
 
     if(profilePic) profileFields.profilePic = profilePic;

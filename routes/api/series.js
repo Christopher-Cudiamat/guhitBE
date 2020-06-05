@@ -54,5 +54,14 @@ router.post(
 );
 
 
+//@route   POST api/series/delete-series
+//@desc    post a creator's series
+//@access  Private
+router.delete(
+  '/delete-series',
+  passport.authenticate('jwt',{session:false}),
+  SeriesController.deleteSeries
+);
+
 
 module.exports = router;

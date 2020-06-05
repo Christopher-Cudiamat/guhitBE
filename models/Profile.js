@@ -35,10 +35,11 @@ const ProfileSchema = new mongoose.Schema({
   isCreator:{
     type: Boolean,
     default:false
+  },
+  seriesMade:{
+    type: [String]
   }
-  // socialMedia: {
-  //   type: [String]
-  // },
+  
 
 
 });
