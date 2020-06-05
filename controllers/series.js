@@ -31,9 +31,10 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////GET MY ALL SERIES////////////////////////////////////////////////
   getMySeries: async(req, res, next) => {
-    console.log("GET MY SERIES");
+    console.log("GET MY SERIES"); 
+    console.log("req.query.id",req.query.id)
     try {
-      const series = await Series.findOne({user: req.user.id}).populate('user',['email']);
+      const series = await Series.findOne({user: req.user.id,_id:req.query.id});
 
       if(!series) {
         return res.status(400).json({msg: 'There is no series created by this user'})
@@ -61,7 +62,7 @@ module.exports = {
 
     const {
       seriesTitle,
-      seriesUrl,
+      seriesUrl, 
       genrePrimary,
       genreSecondary,
       summary

@@ -60,6 +60,7 @@ module.exports = {
       matureContents: Joi.string(),
       openForComments: Joi.string(),
       seriesId: Joi.string(),
+      chapterId: Joi.string(),
     }),
   }
 }

@@ -33,8 +33,15 @@ module.exports = {
   ////GET ALL MY SERIES////////////////////////////////////////////////
   getMyChapter: async(req, res, next) => {
     console.log("GET A SPECIEFIC CHAPTER");
+    console.log("req.query.id",req.query.id)
     try {
-      
+      const chapter = await Chapter.findOne({user: req.user.id,_id:req.query.id});
+
+      if(!chapter) {
+        return res.status(400).json({msg: 'There is no series created by this user'})
+      }
+
+      res.json(chapter);
     } catch (error) {
   
       res.status(500).send('Server Error');
@@ -47,9 +54,6 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST MY SERIES////////////////////////////////////////////////
   postCreateChapter: async(req, res, next) => {
-
-    const isEditChapter = false;
-
 
     const seriesId= req.value.body.seriesId;
   
@@ -74,27 +78,28 @@ module.exports = {
     if(chapterTitle) chapterFields.chapterTitle = chapterTitle;
     if(chapterCover) chapterFields.chapterCover = chapterCover;
     if(chapterPages) chapterFields.chapterPages = chapterPages;
-    if(chapterDateCreated && !isEditChapter) chapterFields.chapterDateCreated = chapterDateCreated;
-    if(chapterDateUpdated && isEditChapter) chapterFields.chapterDateUpdated = chapterDateUpdated;
+    if(chapterDateCreated) chapterFields.chapterDateCreated = chapterDateCreated;
+    // if(chapterDateUpdated && isEditChapter) chapterFields.chapterDateUpdated = chapterDateUpdated;
     if(chapterDescription) chapterFields.chapterDescription = chapterDescription;
     if(tags) chapterFields.tags = tags.toString().split(',').map(tool => tool.trim());
 
     chapterFields.seriesId = seriesId;
     chapterFields.matureContents = matureContents;
-    chapterFields.openForComments = openForComments;
+    chapterFields.openForComments = openForComments; 
 
     try {
-      
-      let chapter = await Chapter.findOne({user: req.user.id, chapterTitle: req.value.body.chapterTitle});
+      if(req.value.body.chapterId !== "undefined"){
+        let chapter = await Chapter.findOne({user: req.user.id, _id:req.value.body.chapterId});
+    
+        if(chapter) {
+          let chapter = await Chapter.findOneAndUpdate(
+            {user: req.user.id,_id:req.value.body.chapterId},
+            {$set: chapterFields},
+            {new: true}
+          );
 
-      if(chapter && isEditChapter) {
-        let chapter = await Chapter.findOneAndUpdate(
-          {user: req.user.id},
-          {$set: chapterFields},
-          {new: true}
-        );
-
-        return res.json(chapter);
+          return res.json(chapter);
+        }
       }
 
       chapter = new Chapter(chapterFields);

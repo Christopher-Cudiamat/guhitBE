@@ -63,9 +63,8 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST CREATE PROFILE FOR PUBLISHERS OR CREATOR///////////////
   postProfile: async(req, res, next) => {
-
+    const isCreator = true
     const profilePic = req.file.path;
-  
     const joinedDate = formatedNewDate();
     const strTools = req.value.body.tools;
     const tools = strTools.split(",");
@@ -89,23 +88,23 @@ module.exports = {
     if(displayName) profileFields.displayName = displayName;
     if(city) profileFields.city = city;
     if(description) profileFields.description = description;
-    // if(isCreator) profileFields.isCreator = isCreator;
+    if(isCreator) profileFields.isCreator = isCreator;
     if(patreon) profileFields.patreon = patreon;
     if(joinedDate) profileFields.joinedDate = joinedDate;
     if(tools) {
       profileFields.tools = tools.toString().split(',').map(tool => tool.trim());
     }
+  
 
     try {
 
       //LOOK FOR ONE
       let profile = await Profile.findOne({user: req.user.id});
-
+      
       //UPDATE IF FOUND ONE
       if(profile) {
         let profile = await Profile.findOneAndUpdate(
           {user: req.user.id},
-          // {seriesMade: req.user.id},
           {$set: profileFields},
           {new: true}
         );

@@ -32,6 +32,10 @@ const ProfileSchema = new mongoose.Schema({
   tools: {
     type: [String]
   },
+  isCreator:{
+    type: Boolean,
+    default:false
+  }
   // socialMedia: {
   //   type: [String]
   // },
