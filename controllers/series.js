@@ -17,7 +17,7 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////GET ALL MY SERIES////////////////////////////////////////////////
   getAllMySeries: async(req, res, next) => {
-    console.log("GET ALL CREATOR SERIES");
+    console.log("GET ALL MY SERIES");
     try {
       const series = await Series.find({user: req.user.id}).populate('user',['email']);
 
