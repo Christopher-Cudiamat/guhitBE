@@ -3,6 +3,9 @@ const Chapters = require('../models/Chapter');
 const Profile = require('../models/Profile');
 const User = require('../models/User');
 const {formatedNewDate} = require('../helpers/dateFormat');
+const fs = require('fs');
+var path = require('path');
+
 
 
 
@@ -53,6 +56,7 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST MY SERIES////////////////////////////////////////////////
   postCreateSeries: async(req, res, next) => {
+ 
     
     const seriesDateCreated = formatedNewDate();
     const strTags = req.value.body.tags;
@@ -92,19 +96,7 @@ module.exports = {
     try {
         
       if(req.value.body.isNewSeries !== "isNewSeries"){
-        let series = await Series.findOne({user: req.user.id, _id: req.value.body.isNewSeries});
-        // let profile = await Profile.findOne({user: req.user.id});
-        // console.log("PROFILE",profile);
-
-        // if(profile) {
-        //   let profile = await Profile.findOneAndUpdate(
-        //     {user: req.user.id},
-        //     {seriesMade: profile.seriesMade.push("push")},
-        //     {new: true}
-        //   );
-  
-        //   return res.json(profile);
-        // }
+        
 
         if(series) {
           let series = await Series.findOneAndUpdate(
@@ -131,17 +123,24 @@ module.exports = {
   },
 
 
-    ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////
   ////DELETE A SPECIEFIC SERIES////////////////////////////////////////////////
   deleteSeries: async(req, res, next) => {
     console.log("DELETE SERIES"); 
     console.log("QUERY ID",req.query.id); 
 
+  //   const paths = '../uploads/series/1592228150943cover.jpg';
+  
+  //   fs.unlink(path.join("public/" + paths),function(err){
+  //     if(err) throw err;
+  //     console.log('File deleted!');
+  // });
+ 
     try {
       await Series.findOneAndRemove({user: req.user.id,_id:req.query.id});
       await Chapters.deleteMany({user: req.user.id,seriesId:req.query.id});
-
+   
       res.json({msg: 'series is deleted'});
     } catch (error) {
   

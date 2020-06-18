@@ -55,5 +55,16 @@ router.post(
 );
 
 
+//@route   DELETE api/series/delete-chapter
+//@desc    DELETE a creator's chapter
+//@access  Private
+router.delete(
+  '/delete-chapter',
+  passport.authenticate('jwt',{session:false}),
+  ChapterController.deleteChapter
+);
+
+
+
 
 module.exports = router;

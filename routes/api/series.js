@@ -2,13 +2,18 @@ const router = require('express-promise-router')();
 const SeriesController = require('../../controllers/series');
 const {validateBody, schemas} = require('../../helpers/routeHelper');
 const passport = require('passport');
+const fs = require('fs');
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function(req,file,cb){
-    cb(null, './uploads/series');
+    // const dir = `./uploads/series/${req.body.seriesTitle}`
+    // fs.mkdir(dir, err => cb(err, dir));
+    cb(null, "./uploads/series");
   },
   filename: function(req,file,cb){
-    cb(null, Date.now() + file.originalname);
+   
+    // console.log("ID-----",req);
+    cb(null,`${req.body.seriesTitle}-${file.originalname}`);
   }
 });
 const upload = multer({storage: storage, limits:{
@@ -54,8 +59,8 @@ router.post(
 );
 
 
-//@route   POST api/series/delete-series
-//@desc    post a creator's series
+//@route   DELETE api/series/delete-series
+//@desc    DELETE a creator's series
 //@access  Private
 router.delete(
   '/delete-series',

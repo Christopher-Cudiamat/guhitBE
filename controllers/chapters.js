@@ -115,4 +115,22 @@ module.exports = {
   },
 
 
+  ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
+  ////DELETE A SPECIEFIC SERIES////////////////////////////////////////////////
+  deleteChapter: async(req, res, next) => {
+    console.log("DELETE CHAPTER"); 
+    console.log("QUERY ID",req.query.id); 
+
+    try {
+      await Chapter.findOneAndRemove({user: req.user.id,_id:req.query.id});
+
+      res.json({msg: 'chapter is deleted'});
+    } catch (error) {
+  
+      res.status(500).send('Server Error');
+    }
+  },
+
+
 }
