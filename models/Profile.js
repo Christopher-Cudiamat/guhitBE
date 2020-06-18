@@ -6,6 +6,7 @@ const ProfileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:'user'
   },
+ 
   profilePic: {
     type: String,
   },
@@ -19,21 +20,26 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
   },
   joinedDate:{
-    type: Date,
+    type: String, 
   },
-  isCreator:{
-    type: Boolean,
-    default: false
-  },
+  // isCreator:{
+  //   type: Boolean,
+  //   default: false
+  // },
   patreon:{
     type: String
   },
   tools: {
     type: [String]
   },
-  // socialMedia: {
-  //   type: [String]
-  // },
+  isCreator:{
+    type: Boolean,
+    default:false
+  },
+  seriesMade:{
+    type: [String]
+  }
+  
 
 
 });

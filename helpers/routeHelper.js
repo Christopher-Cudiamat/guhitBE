@@ -31,8 +31,6 @@ module.exports = {
       displayName: Joi.string(),
       city: Joi.string(),
       description: Joi.string(),
-      joinedDate: Joi.date(),
-      isCreator: Joi.boolean(),
       patreon: Joi.string().optional(),
       tools: Joi.string(),
       // tools: Joi.array().items(Joi.string()).optional(),
@@ -47,7 +45,22 @@ module.exports = {
       tags: Joi.string(),
       consent: Joi.string(),
       condition: Joi.string(),
-
+      isNewSeries: Joi.string(),
+      // seriesId: Joi.string(),
+    }),
+    chapterSchema: Joi.object({
+      chapterTitle: Joi.string(),
+      chapterCover: Joi.string(),
+      chapterPages: Joi.string(),
+      chapterUrl: Joi.string(),
+      chapterNumber: Joi.string(),
+      chapterDescription: Joi.string(),
+      tags: Joi.string(),
+      chapterLikes: Joi.string(),
+      matureContents: Joi.string(),
+      openForComments: Joi.string(),
+      seriesId: Joi.string(),
+      chapterId: Joi.string(),
     }),
   }
 }

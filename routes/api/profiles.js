@@ -5,9 +5,11 @@ const passport = require('passport');
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function(req,file,cb){
-    cb(null, './uploads/');
+    cb(null, './uploads/profile');
   },
   filename: function(req,file,cb){
+    // cb(null, Date.now() + file.originalname);
+    // console.log("MULTER REQ",req)
     cb(null, Date.now() + file.originalname);
   }
 });
@@ -15,15 +17,17 @@ const upload = multer({storage: storage, limits:{
   // fileSize:1024*1024*5,
 }});
 
-// fileFilter = (req,file,cb) = {
-//   //reject
-//   if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+// const multerFilter = (req, file, cb) => {
+//    if(file.mimetype === 'image/jpeg'){
 //     cd(null,true);
 //   } else {
-//     cb(null,false);
+//     cb(new AppError('Image is not in jpeg! Please upload correct file format.', 400), false);
 //   }
+// };
 
-// }
+// const upload = multer({storage: storage,fileFilter: multerFilter});
+
+
 
 
 //@route   GET api/profiles/me
@@ -43,6 +47,15 @@ router.post(
   '/',
   upload.single('profilePic'),
   validateBody(schemas.profileSchema),
+  passport.authenticate('jwt',{session:false}),
+  ProfilesController.postProfile
+);
+
+//@route   POST api/profiles/me
+//@desc    update or create a user profile
+//@access  Private
+router.post(
+  '/',
   passport.authenticate('jwt',{session:false}),
   ProfilesController.postProfile
 );

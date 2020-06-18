@@ -6,6 +6,9 @@ const SeriesSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:'user'
   },
+  // seriesId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  // },
   seriesCover:{
     type: String
   },
@@ -19,7 +22,7 @@ const SeriesSchema = new mongoose.Schema({
     type: String,
   },
   seriesDateCreated: {
-    type: Date,
+    type: String,
   },
   genrePrimary: {
     type: String,
@@ -41,10 +44,8 @@ const SeriesSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  // seriesLikes: {
-  //   type: Number,
-  //   default: 0
-  // },
+
+  
  
 
 });

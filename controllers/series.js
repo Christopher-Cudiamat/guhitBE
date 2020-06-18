@@ -1,5 +1,11 @@
 const Series = require('../models/Series');
+const Chapters = require('../models/Chapter');
+const Profile = require('../models/Profile');
 const User = require('../models/User');
+const {formatedNewDate} = require('../helpers/dateFormat');
+const fs = require('fs');
+var path = require('path');
+
 
 
 
@@ -9,9 +15,9 @@ module.exports = {
 
   ////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////
-  ////GET MY SERIES////////////////////////////////////////////////
+  ////GET ALL MY SERIES////////////////////////////////////////////////
   getAllMySeries: async(req, res, next) => {
-    console.log("GET MY SERIES");
+    console.log("GET ALL MY SERIES");
     try {
       const series = await Series.find({user: req.user.id}).populate('user',['email']);
 
@@ -28,11 +34,12 @@ module.exports = {
 
   ////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////
-  ////GET MY SERIES////////////////////////////////////////////////
+  ////GET MY ALL SERIES////////////////////////////////////////////////
   getMySeries: async(req, res, next) => {
-    console.log("GET MY SERIES");
+    console.log("GET MY SERIES"); 
+    console.log("req.query.id",req.query.id)
     try {
-      const series = await Series.findOne({user: req.user.id}).populate('user',['email']);
+      const series = await Series.findOne({user: req.user.id,_id:req.query.id});
 
       if(!series) {
         return res.status(400).json({msg: 'There is no series created by this user'})
@@ -49,11 +56,9 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST MY SERIES////////////////////////////////////////////////
   postCreateSeries: async(req, res, next) => {
-    // console.log("POST MY SERIES--------->",req.value.body);
-    // console.log("IMAGE COVER------>", req.files.seriesCover[0].path);
-    // console.log("USER ID--------->",req.user.id);
  
-    const seriesDateCreated = new Date();
+    
+    const seriesDateCreated = formatedNewDate();
     const strTags = req.value.body.tags;
     const tags = strTags.split(",");
     const seriesCover = req.files.seriesCover[0].path;
@@ -61,11 +66,9 @@ module.exports = {
     const condition = req.value.body.condition === "true" ? true:false;
     const consent = req.value.body.consent === "true" ? true:false;
 
-    const isEditSeries = true;
-
     const {
       seriesTitle,
-      seriesUrl,
+      seriesUrl, 
       genrePrimary,
       genreSecondary,
       summary
@@ -74,6 +77,9 @@ module.exports = {
     const seriesFields = {}
 
     seriesFields.user = req.user.id;
+
+
+  
 
     if(seriesTitle) seriesFields.seriesTitle = seriesTitle;
     if(seriesCover) seriesFields.seriesCover = seriesCover;
@@ -88,20 +94,20 @@ module.exports = {
     if(tags) seriesFields.tags = tags.toString().split(',').map(tool => tool.trim());
 
     try {
-      
-    
-      let series = await Series.findOne({user: req.user.id, seriesTitle: req.value.body.seriesTitle});
+        
+      if(req.value.body.isNewSeries !== "isNewSeries"){
+        
 
-      if(series && isEditSeries) {
-        let series = await Series.findOneAndUpdate(
-          {user: req.user.id},
-          {$set: seriesFields},
-          {new: true}
-        );
-
-        return res.json(series);
+        if(series) {
+          let series = await Series.findOneAndUpdate(
+            {user: req.user.id,_id: req.value.body.isNewSeries},
+            {$set: seriesFields},
+            {new: true}
+          );
+          return res.json(series);
+        }
       }
-     
+      
     
       series = new Series(seriesFields);
 
@@ -109,10 +115,38 @@ module.exports = {
 
       res.json(series);
 
+
     } catch (error) {
       console.log(error)
       res.status(500).send('Server Error');
     }
   },
+
+
+  ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
+  ////DELETE A SPECIEFIC SERIES////////////////////////////////////////////////
+  deleteSeries: async(req, res, next) => {
+    console.log("DELETE SERIES"); 
+    console.log("QUERY ID",req.query.id); 
+
+  //   const paths = '../uploads/series/1592228150943cover.jpg';
+  
+  //   fs.unlink(path.join("public/" + paths),function(err){
+  //     if(err) throw err;
+  //     console.log('File deleted!');
+  // });
+ 
+    try {
+      await Series.findOneAndRemove({user: req.user.id,_id:req.query.id});
+      await Chapters.deleteMany({user: req.user.id,seriesId:req.query.id});
+   
+      res.json({msg: 'series is deleted'});
+    } catch (error) {
+  
+      res.status(500).send('Server Error');
+    }
+  },
+
 
 }

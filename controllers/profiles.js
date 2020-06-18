@@ -1,6 +1,8 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const Series = require('../models/Series');
 
+const {formatedNewDate} = require('../helpers/dateFormat');
 
 module.exports = {
 
@@ -37,9 +39,11 @@ module.exports = {
     const profileFields = {};
 
     profileFields.user = user;
+
     if(displayName) profileFields.displayName = displayName;
     if(profilePic) profileFields.profilePic = profilePic;
 
+    console.log(profileFields);
     try {
 
       //CREATE ONE IF NO EXISTING PROFILE
@@ -59,17 +63,10 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST CREATE PROFILE FOR PUBLISHERS OR CREATOR///////////////
   postProfile: async(req, res, next) => {
-
+    const isCreator = true
     const profilePic = req.file.path;
-    const isCreator = true;
-    // const joinedDate = new Date();
-    
-    const d = new Date();
-    const dtf = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' }) 
-    const [{ value: mo },,{ value: da },,{ value: ye }] = dtf.formatToParts(d) 
-  
-    const joinedDate = `${da}-${mo}-${ye}`;
-    const strTools = req.value.body.tools
+    const joinedDate = formatedNewDate();
+    const strTools = req.value.body.tools;
     const tools = strTools.split(",");
 
     const {
@@ -84,6 +81,8 @@ module.exports = {
     const profileFields = {};
 
     profileFields.user = req.user.id;
+    profileFields.seriesMade = [];
+    
 
     if(profilePic) profileFields.profilePic = profilePic;
     if(displayName) profileFields.displayName = displayName;
@@ -95,12 +94,13 @@ module.exports = {
     if(tools) {
       profileFields.tools = tools.toString().split(',').map(tool => tool.trim());
     }
+  
 
     try {
 
       //LOOK FOR ONE
       let profile = await Profile.findOne({user: req.user.id});
-
+      
       //UPDATE IF FOUND ONE
       if(profile) {
         let profile = await Profile.findOneAndUpdate(
