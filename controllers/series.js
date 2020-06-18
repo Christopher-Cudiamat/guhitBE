@@ -17,7 +17,7 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////GET ALL MY SERIES////////////////////////////////////////////////
   getAllMySeries: async(req, res, next) => {
-    console.log("GET ALL MY SERIES");
+    console.log("GET ALL CREATOR SERIES");
     try {
       const series = await Series.find({user: req.user.id}).populate('user',['email']);
 
@@ -78,8 +78,6 @@ module.exports = {
 
     seriesFields.user = req.user.id;
 
-
-  
 
     if(seriesTitle) seriesFields.seriesTitle = seriesTitle;
     if(seriesCover) seriesFields.seriesCover = seriesCover;
