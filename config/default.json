@@ -1,5 +1,8 @@
 { 
   
   "mongoURI": "mongodb+srv://guhitAdmin:guhitAdmin@cluster0-vj6vm.mongodb.net/test?retryWrites=true&w=majority",
-  "jwtSecret": "mysecrettoken"
+  "jwtSecret": "mysecrettoken",
+  "mailer": "guhitcomics@gmail.com",
+  "password": "guhit2020",
+  "client_url": "http://localhost:3000"
 }

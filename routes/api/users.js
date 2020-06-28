@@ -1,19 +1,25 @@
-const express = require('express');
 const router = require('express-promise-router')();
 const passport = require('passport');
 const {validateBody, schemas} = require('../../helpers/routeHelper');
 const UsersController = require('../../controllers/users');
-const passportConf = require('../../passport');
 
 
+//@route   POST api/email-verification
+//@desc    Send email verification
+//@access  Public
+//schema: email, password
+router.post(
+  '/email-verification',
+  validateBody(schemas.authSchema),
+  UsersController.verifyEmail
+);
 
 //@route   POST api/users
-//@desc    Register a user
+//@desc    Register a user and save to data base
 //@access  Public
 //schema: email, password
 router.post(
   '/signup',
-  validateBody(schemas.authSchema),
   UsersController.signUp
 );
 
@@ -45,7 +51,6 @@ router.post(
   passport.authenticate('facebookToken',{session:false}),
   UsersController.facebookOauth,
 );
-
 
 //@route   GET api/users/secret
 //@desc    authenticate a user

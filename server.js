@@ -5,7 +5,6 @@ const connectDB = require('./config/dbConnect');
 const cors = require('cors');
 const passport = require('passport');
 
-
 //instance of exp.js
 const app = express();
 
@@ -30,6 +29,9 @@ app.use('/api/series', require('./routes/api/series'));
 app.use('/api/chapters', require('./routes/api/chapters'));
 
 app.use(passport.initialize());
+
+
+
 
 //if there is no port yet fallback to lh 5000
 const PORT = process.env.PORT || 5000;

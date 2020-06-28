@@ -1,3 +1,4 @@
+
 const router = require('express-promise-router')();
 const ProfilesController = require('../../controllers/profiles');
 const {validateBody, schemas} = require('../../helpers/routeHelper');
@@ -17,15 +18,9 @@ const upload = multer({storage: storage, limits:{
   // fileSize:1024*1024*5,
 }});
 
-// const multerFilter = (req, file, cb) => {
-//    if(file.mimetype === 'image/jpeg'){
-//     cd(null,true);
-//   } else {
-//     cb(new AppError('Image is not in jpeg! Please upload correct file format.', 400), false);
-//   }
-// };
 
-// const upload = multer({storage: storage,fileFilter: multerFilter});
+
+
 
 
 
@@ -67,4 +62,4 @@ router.post(
   ProfilesController.postInitProfile
 );
 
-module.exports = router;
+module.exports = router; 

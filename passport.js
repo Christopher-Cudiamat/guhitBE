@@ -1,3 +1,4 @@
+
 const passport = require('passport');
 const jwtStrategy = require('passport-jwt').Strategy;
 const {ExtractJwt} = require('passport-jwt');
@@ -8,23 +9,28 @@ const FacebookTokenStrategy = require('passport-facebook-token');
 const User = require('./models/User');
 
 
+
+
 //JSON WEBTOKEN STRATEGY
 passport.use('jwt',new jwtStrategy({
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
   secretOrKey: config.get('jwtSecret'),
 }, async(payload,done) => {
   try {
+
     //find the user specified in token
     const user = await User.findById(payload.sub).select('-local.password');
 
     //if doesnt exist
     if(!user) {
-      return done(null, false);
+      console.log("no sub")
+      return done(null, false); 
     }
 
     //otherwise return user
     done(null, user);
   } catch (error) {
+    console.log("ERROR____________________________");
     done(error, false);
   }
 }));

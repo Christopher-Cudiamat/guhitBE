@@ -1,3 +1,4 @@
+var express = require('express');
 const Profile = require('../models/Profile');
 const User = require('../models/User');
 const Series = require('../models/Series');
@@ -30,12 +31,14 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST CREATE PROFILE AFTER SIGN UP////////////////////////////////////////////////
   postInitProfile: async(req, res, next) => {
-
+    console.log("profilleeeeeeeeeeee");
+    
     const {displayName} = req.body;
     const user = req.user.id;
     const profilePic = req.user.local.avatar;
 
-    //Buidle profileFields
+    console.log("displayName",displayName)
+ 
     const profileFields = {};
 
     profileFields.user = user;
