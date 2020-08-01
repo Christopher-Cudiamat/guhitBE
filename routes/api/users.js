@@ -4,6 +4,8 @@ const {validateBody, schemas} = require('../../helpers/routeHelper');
 const UsersController = require('../../controllers/users');
 
 
+
+
 //@route   POST api/email-verification
 //@desc    Send email verification
 //@access  Public
@@ -59,6 +61,15 @@ router.get(
   '/secret',
   passport.authenticate('jwt',{session:false}),
   UsersController.secret
+);
+
+
+//@route   GET api/users/sendOtp
+//@desc    sen a one time password
+//@access  Public
+router.post(
+  '/send-otp',
+  UsersController.sendOtp
 );
 
 module.exports = router;

@@ -9,7 +9,7 @@ const FacebookTokenStrategy = require('passport-facebook-token');
 const User = require('./models/User');
 
 
-
+module.exports = passport => {
 
 //JSON WEBTOKEN STRATEGY
 passport.use('jwt',new jwtStrategy({
@@ -117,3 +117,5 @@ passport.use(new LocalStrategy({
   }
   
 }));
+
+};

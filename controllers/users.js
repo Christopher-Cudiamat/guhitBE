@@ -140,41 +140,62 @@ module.exports = {
     console.log('I MANAGED TO GET HERE',req.user);
     const user = req.user
     res.json({user});
-  }
+  },
+
+  sendOtp: async(req, res, next) => {
+    
+    const {email}  = req.body;
+    console.log(email)
+
+    let code =  Math.floor(Math.random() * 100000) + 1;
+
+    const foundUser = await User.findOne({"local.email":email});
+
+    if(!foundUser) {
+      return res.status(400).json({error: 'User does not exist'});
+    }
+
+
+    const transporter = mailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth:{
+          user: config.get('mailer'),
+          pass: config.get('password')
+      },
+    });
+
+    transporter.use('compile', hbs({
+      viewEngine: {
+          extName: '.handlebars',
+          partialsDir: viewPath,
+          layoutsDir: viewPath,
+          defaultLayout: false,
+          },
+          viewPath:  viewPath,
+          extName: '.handlebars',
+
+    }));
+
+    let body =  {
+      from: "www.guhit.com",
+      to: email,
+      subject: 'Guhit change password',
+      template: 'changepassword',
+      context: {
+        verifyCode : code,
+      }
+    }
+
+    transporter.sendMail(body,(err,result) => {
+      if(err){
+        return false;
+      }
+      return res.json({
+        message: 'Hi! we sent you an OTP'
+      });
+    });
 }
 
-
-
-  // signUp: async(req, res, next) => {
-  //   console.log('SIGNUP CALLED');
-  //   const {email, password}  = req.value.body;
-
-  //   //Check if email exists already
-  //   const foundUser = await User.findOne({"local.email":email});
-  //   if(foundUser) {return res.status(403).json({error: 'Email is already in use'});}
-    
-  //   //get users gravatar
-  //   const avatar = gravatar.url(email,{
-  //     s: '200',
-  //     r: 'pg',
-  //     d: 'mm',
-  //   });
- 
-  //   //Create new user
-  //   const newUser = new User({
-  //     method: "local",
-  //     local:{
-  //       email: email,
-  //       password: password,
-  //       avatar: avatar
-  //     }
-  //   }); 
-  //   await newUser.save();
-
-  //   //Generate token
-  //   const token = signToken(newUser);
-
-  //   //Respond with token
-  //   res.status(200).json({token});
-   
-  // },
+}

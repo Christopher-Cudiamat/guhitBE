@@ -30,6 +30,8 @@ app.use('/api/chapters', require('./routes/api/chapters'));
 
 app.use(passport.initialize());
 
+require('./passport')(passport);
+
 
 
 
