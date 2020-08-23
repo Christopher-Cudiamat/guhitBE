@@ -2,6 +2,7 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
 const Series = require('../models/Series');
+const gravatar = require('gravatar');
 
 const {formatedNewDate} = require('../helpers/dateFormat');
 
@@ -31,10 +32,17 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST CREATE PROFILE AFTER SIGN UP////////////////////////////////////////////////
   postInitProfile: async(req, res, next) => {
+
+    const avatar = gravatar.url(req.email,{
+      s: '200',
+      r: 'pg',
+      d: 'mm',
+    });
     
     const {displayName} = req.body;
     const user = req.user.id;
-    const profilePic = req.user.local.avatar;
+    const profilePic = avatar;
+    // const profilePic = req.user.local.avatar;
  
     const profileFields = {};
 

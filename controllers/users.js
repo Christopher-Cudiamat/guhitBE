@@ -27,9 +27,10 @@ module.exports = {
 
     let code =  Math.floor(Math.random() * 100000) + 1;
 
-    const foundUser = await User.findOne({"local.email":email});
+    const foundUserLocal = await User.findOne({"local.email":email});
+    const foundUserGoogle = await User.findOne({"google.email":email});
 
-    if(foundUser) {
+    if(foundUserLocal || foundUserGoogle) {
       return res.status(400).json({error: 'Email is already in use'});
     }
 
@@ -111,8 +112,6 @@ module.exports = {
 
         const newToken = signToken(newUser);
 
-        console.log(newToken)
-
         res.status(200).json({newToken,email});
 
       });
@@ -122,7 +121,11 @@ module.exports = {
 
   googleOauth: async(req, res, next) => {
     const token = signToken(req.user);
-    res.status(200).json({token});
+
+    res.status(200).json({
+      token,
+      email: req.user.google.email,
+    });
   },
 
   facebookOauth: async(req, res, next) => {
@@ -130,14 +133,11 @@ module.exports = {
   },
 
   signIn: async(req, res, next) => {
-    console.log('LOGIN req',req);
-    console.log('LOGIN res',res);
     const token = signToken(req.user);
     res.status(200).json({token});
   },
 
   secret: async(req, res, next) => {
-    console.log('I MANAGED TO GET HERE',req.user);
     const user = req.user
     res.json({user});
   },
@@ -145,7 +145,6 @@ module.exports = {
   sendOtp: async(req, res, next) => {
     
     const {email}  = req.body;
-    console.log(email)
 
     let code =  Math.floor(Math.random() * 100000) + 1;
 
@@ -154,7 +153,6 @@ module.exports = {
     if(!foundUser) {
       return res.status(400).json({error: 'User does not exist'});
     }
-
 
     const transporter = mailer.createTransport({
       host: 'smtp.gmail.com',
