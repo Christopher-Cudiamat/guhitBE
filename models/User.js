@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
   //tell if its local google or fb login method
   method: {
     type: String,
-    enum: ['local','google', 'facebook'],
+    enum: ['local','google','facebook'],
     required: true
   },
   local: {
@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
       type: String,
-      lowercase: true,
+      lowercaSe: true,
     }
   },
 

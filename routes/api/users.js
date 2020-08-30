@@ -50,7 +50,7 @@ router.post(
 //@access  Public
 router.post(
   '/oauth/facebook',
-  passport.authenticate('facebookToken',{session:false}),
+  passport.authenticate('facebook-token',{session:false}),
   UsersController.facebookOauth,
 );
 

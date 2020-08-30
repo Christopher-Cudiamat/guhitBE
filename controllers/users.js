@@ -119,7 +119,7 @@ module.exports = {
    
   },
 
-  googleOauth: async(req, res, next) => {
+  googleOauth: async(req, res) => {
     const token = signToken(req.user);
 
     res.status(200).json({
@@ -128,8 +128,13 @@ module.exports = {
     });
   },
 
-  facebookOauth: async(req, res, next) => {
+  facebookOauth: async(req, res) => {
+    const token = signToken(req.user);
     console.log('LOGIN WITH FACEBOOK SUCCESS');
+    res.status(200).json({
+      token,
+      email: req.user.facebook.email,
+    });
   },
 
   signIn: async(req, res, next) => {

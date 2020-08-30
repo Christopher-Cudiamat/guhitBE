@@ -5,6 +5,8 @@ const connectDB = require('./config/dbConnect');
 const cors = require('cors');
 const passport = require('passport');
 
+
+
 //instance of exp.js
 const app = express();
 
@@ -37,5 +39,6 @@ require('./passport')(passport);
 
 //if there is no port yet fallback to lh 5000
 const PORT = process.env.PORT || 5000;
+
 
 app.listen(PORT, () => console.log(`SERVER STARTED ON PORT ${PORT}`));
