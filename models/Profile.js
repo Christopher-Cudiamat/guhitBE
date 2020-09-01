@@ -22,10 +22,10 @@ const ProfileSchema = new mongoose.Schema({
   joinedDate:{
     type: String, 
   },
-  // isCreator:{
-  //   type: Boolean,
-  //   default: false
-  // },
+  isCreator:{
+    type: Boolean,
+    default: false
+  },
   patreon:{
     type: String
   },

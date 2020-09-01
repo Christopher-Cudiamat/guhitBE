@@ -29,6 +29,7 @@ app.use('/api/users', require('./routes/api/users'));
 app.use('/api/profiles', require('./routes/api/profiles'));
 app.use('/api/series', require('./routes/api/series'));
 app.use('/api/chapters', require('./routes/api/chapters'));
+app.use('/api/creators', require('./routes/api/creators'));
 
 app.use(passport.initialize());
 

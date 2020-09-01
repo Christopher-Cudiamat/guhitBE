@@ -1,7 +1,6 @@
 const Series = require('../models/Series');
 const Chapters = require('../models/Chapter');
-const Profile = require('../models/Profile');
-const User = require('../models/User');
+
 const {formatedNewDate} = require('../helpers/dateFormat');
 const fs = require('fs');
 var path = require('path');
@@ -36,8 +35,7 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////GET MY ALL SERIES////////////////////////////////////////////////
   getMySeries: async(req, res, next) => {
-    console.log("GET MY SERIES"); 
-    console.log("req.query.id",req.query.id)
+ 
     try {
       const series = await Series.findOne({user: req.user.id,_id:req.query.id});
 
