@@ -21,6 +21,7 @@ const signToken = (user) => {
 
 module.exports = {
 
+  //VERIFY IF THE OTP IS CORRECT THEN CONTINUE TO REGISTER
   verifyEmail: async(req, res, next) => {
 
     const {email, password}  = req.value.body;
@@ -29,8 +30,9 @@ module.exports = {
 
     const foundUserLocal = await User.findOne({"local.email":email});
     const foundUserGoogle = await User.findOne({"google.email":email});
+    const foundUserFacebook = await User.findOne({"facebook.email":email});
 
-    if(foundUserLocal || foundUserGoogle) {
+    if(foundUserLocal || foundUserGoogle || foundUserFacebook) {
       return res.status(400).json({error: 'Email is already in use'});
     }
 
@@ -85,7 +87,7 @@ module.exports = {
     });
   },
 
-
+  //REGISTER AND LOGIN WITH MANUALY
   signUp: async(req, res, next) => {
    
     const {token,verificationCode}  = req.body;
@@ -119,6 +121,7 @@ module.exports = {
    
   },
 
+  //REGISTER AND LOGIN WITH GOOGLE
   googleOauth: async(req, res) => {
     const token = signToken(req.user);
 
@@ -128,9 +131,9 @@ module.exports = {
     });
   },
 
+  //REGISTER AND LOGIN WITH FACEBOOK
   facebookOauth: async(req, res) => {
     const token = signToken(req.user);
-    console.log('LOGIN WITH FACEBOOK SUCCESS');
     res.status(200).json({
       token,
       email: req.user.facebook.email,
@@ -147,6 +150,7 @@ module.exports = {
     res.json({user});
   },
 
+  //SEND OTP TO EMAIL
   sendOtp: async(req, res, next) => {
     
     const {email}  = req.body;

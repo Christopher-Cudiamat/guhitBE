@@ -19,8 +19,8 @@ const ProfileSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  joinedDate:{
-    type: String, 
+  likes:{
+    type: Number, 
   },
   isCreator:{
     type: Boolean,
@@ -37,11 +37,11 @@ const ProfileSchema = new mongoose.Schema({
     default:false
   },
   seriesMade:{
-    type: [String]
+    type: [Object]
   }
-  
-
-
+ 
+},{
+  timestamps: true
 });
 
 

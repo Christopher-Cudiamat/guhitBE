@@ -16,14 +16,8 @@ const upload = multer({storage: storage, limits:{
 module.exports = {
   uploadImage: (profilePic) => {
     return (req,res, next) => {
-      console.log(profilePic)
 
       const result = upload.single(profilePic);
-      console.log("RESULT============",result);
-      // req.file.path = result;
-      console.log("FILE============",req.body.profilePic)
-
-      // next();
 
     }
     

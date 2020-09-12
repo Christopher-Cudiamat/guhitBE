@@ -32,7 +32,8 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////POST CREATE PROFILE AFTER SIGN UP////////////////////////////////////////////////
   postInitProfile: async(req, res, next) => {
-
+    console.log("REQ_______",req.body);
+    console.log("RES_______",res);
     const avatar = gravatar.url(req.email,{
       s: '200',
       r: 'pg',
@@ -42,16 +43,12 @@ module.exports = {
     const {displayName} = req.body;
     const user = req.user.id;
     const profilePic = avatar;
-    // const profilePic = req.user.local.avatar;
- 
     const profileFields = {};
-
     profileFields.user = user;
 
     if(displayName) profileFields.displayName = displayName;
     if(profilePic) profileFields.profilePic = profilePic;
 
-    console.log(profileFields);
     try {
 
       //CREATE ONE IF NO EXISTING PROFILE
@@ -73,9 +70,9 @@ module.exports = {
   postProfile: async(req, res, next) => {
     const isCreator = true
     const profilePic = req.file.path;
-    const joinedDate = formatedNewDate();
     const strTools = req.value.body.tools;
     const tools = strTools.split(",");
+    const likes = Math.floor(Math.random() * 1000) + 1;
 
     const {
       displayName,
@@ -90,6 +87,7 @@ module.exports = {
 
     profileFields.user = req.user.id;
     profileFields.seriesMade = [];
+    //SOLVE THIS
     
 
     if(profilePic) profileFields.profilePic = profilePic;
@@ -98,7 +96,9 @@ module.exports = {
     if(description) profileFields.description = description;
     if(isCreator) profileFields.isCreator = isCreator;
     if(patreon) profileFields.patreon = patreon;
-    if(joinedDate) profileFields.joinedDate = joinedDate;
+    
+    //This is for testing only to be changed with real values later..
+    if(likes) profileFields.likes = likes;
     if(tools) {
       profileFields.tools = tools.toString().split(',').map(tool => tool.trim());
     }

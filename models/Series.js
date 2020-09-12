@@ -44,10 +44,11 @@ const SeriesSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-
-  
- 
-
+  likes:{
+    type: Number, 
+  },
+},{
+  timestamps: true
 });
 
 

@@ -12,7 +12,6 @@ const storage = multer.diskStorage({
   },
   filename: function(req,file,cb){
    
-    // console.log("ID-----",req);
     cb(null,`${req.body.seriesTitle}-${file.originalname}`);
   }
 });
@@ -66,6 +65,15 @@ router.delete(
   '/delete-series',
   passport.authenticate('jwt',{session:false}),
   SeriesController.deleteSeries
+);
+
+
+//@route   GET api/series/series-list
+//@desc    get all comics series
+//@access  Public
+router.get(
+  '/list',
+  SeriesController.getSeriesLists
 );
 
 

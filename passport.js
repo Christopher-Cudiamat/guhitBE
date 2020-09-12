@@ -26,14 +26,12 @@ passport.use('jwt',new jwtStrategy({
 
     //if doesnt exist
     if(!user) {
-      console.log("no sub")
       return done(null, false); 
     }
 
     //otherwise return user
     done(null, user);
   } catch (error) {
-    console.log("ERROR____________________________");
     done(error, false);
   }
 }));
@@ -50,11 +48,8 @@ passport.use('googleToken',new GooglePlusTokenStrategy({
     
     const existingUser = await User.findOne({'google.id': profile.id});
     if(existingUser) {
-      console.log("User already exist in DB");
       return done(null,existingUser)
     }
-
-    console.log("User doesn exist, save in DB");
     //if new account
     const newUser = new User({
       method: 'google',
@@ -114,26 +109,20 @@ passport.use(new LocalStrategy({
 }, async (email,password, done) => {
   try {
      
-    //find the user given the email
     const user = await User.findOne({"local.email": email});
-    console.log(user);
-    //if not, handle it
+
     if (!user) {
-      console.log("NO USER EMAIL");
       return done(null,false, { message: 'bad password' });
     }
-    //check if th4e pass is correct
+
     const isMatch = await user.isValidPassword(password);
  
     if (!isMatch){
-      console.log("NO USER PASSWPRD");
       return done(null,false,{ message: 'bad password' });
     } 
  
-
     done(null,user);
   } catch (error) {
-    console.log("ERRROOOORRRR",error)
     done(error,false,{ message: 'bad password' });
   }
   

@@ -15,17 +15,14 @@ module.exports = {
       req.value['body'] = result.value;
 
       next();
-      // req.value.body insted of req.body
 
     }
   },
 
   schemas : {
     authSchema: Joi.object({
-
       email: Joi.string().email().required(),
       password: Joi.string().required()
-      
     }),
     profileSchema: Joi.object({
       displayName: Joi.string(),

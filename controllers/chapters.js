@@ -9,9 +9,6 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////GET ALL MY SERIES////////////////////////////////////////////////
   getAllMyChapters: async(req, res, next) => {
-    console.log("REQUEST PARAMS", req.param.id);
-    console.log("REQUEST QUERY", req.query.id);
- 
     try {
       
       const chapter = await Chapter.find({user: req.user.id, seriesId:req.query.id}).populate('user',['email']);
@@ -32,8 +29,6 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////GET ALL MY SERIES////////////////////////////////////////////////
   getMyChapter: async(req, res, next) => {
-    console.log("GET A SPECIEFIC CHAPTER");
-    console.log("req.query.id",req.query.id)
     try {
       const chapter = await Chapter.findOne({user: req.user.id,_id:req.query.id});
 
@@ -56,9 +51,7 @@ module.exports = {
   postCreateChapter: async(req, res, next) => {
 
     const seriesId= req.value.body.seriesId;
-  
     const chapterDateCreated = formatedNewDate();
-    const chapterDateUpdated = formatedNewDate();
     const strTags = req.value.body.tags;
     const tags = strTags.split(",");
     const chapterCover = req.files.chapterCover[0].path;
@@ -70,16 +63,13 @@ module.exports = {
       chapterTitle,
       chapterDescription
     } = req.value.body;
-
     const chapterFields = {}
-
     chapterFields.user = req.user.id;
 
     if(chapterTitle) chapterFields.chapterTitle = chapterTitle;
     if(chapterCover) chapterFields.chapterCover = chapterCover;
     if(chapterPages) chapterFields.chapterPages = chapterPages;
     if(chapterDateCreated) chapterFields.chapterDateCreated = chapterDateCreated;
-    // if(chapterDateUpdated && isEditChapter) chapterFields.chapterDateUpdated = chapterDateUpdated;
     if(chapterDescription) chapterFields.chapterDescription = chapterDescription;
     if(tags) chapterFields.tags = tags.toString().split(',').map(tool => tool.trim());
 
@@ -109,7 +99,6 @@ module.exports = {
       res.json(chapter);
 
     } catch (error) {
-      console.log(error)
       res.status(500).send('Server Error');
     }
   },
@@ -119,15 +108,11 @@ module.exports = {
   ////////////////////////////////////////////////////////////////
   ////DELETE A SPECIEFIC SERIES////////////////////////////////////////////////
   deleteChapter: async(req, res, next) => {
-    console.log("DELETE CHAPTER"); 
-    console.log("QUERY ID",req.query.id); 
-
     try {
       await Chapter.findOneAndRemove({user: req.user.id,_id:req.query.id});
 
       res.json({msg: 'chapter is deleted'});
     } catch (error) {
-  
       res.status(500).send('Server Error');
     }
   },
