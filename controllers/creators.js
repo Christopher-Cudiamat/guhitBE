@@ -50,7 +50,7 @@ module.exports = {
   //GET A SPECIEFIC CREATOR'S DATA////////////////////////////////////
   getCreator : async(req, res, next) => {
     try {
-      const creator = await Profile.findOne({_id:req.query.id})
+      const creator = await Profile.findOne({user:req.query.id})
         .select(
           '-isCreator -user -__v -_id'
         );

@@ -76,5 +76,13 @@ router.get(
   SeriesController.getSeriesLists
 );
 
+//@route   GET api/series/comics
+//@desc    get all comics series
+//@access  Public
+router.get(
+  '/comics',
+  SeriesController.getSeriesComics
+);
+
 
 module.exports = router;

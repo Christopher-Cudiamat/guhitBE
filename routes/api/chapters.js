@@ -65,6 +65,15 @@ router.delete(
 );
 
 
+// @route   GET api/series/my-chapter
+// @desc    get a speciefic chapter
+// @access  Public
+router.get(
+  '/chapter',
+  ChapterController.getChapterComics
+);
+
+
 
 
 module.exports = router;

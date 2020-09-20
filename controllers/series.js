@@ -1,10 +1,8 @@
 const Series = require('../models/Series');
 const Chapters = require('../models/Chapter');
-const {formatedNewDate} = require('../helpers/dateFormat');
-
+const Profile = require('../models/Profile');
 
 module.exports = {
-
 
   ////GET ALL MY SERIES////////////////////////////////////////////////
   getAllMySeries: async(req, res, next) => {
@@ -40,7 +38,6 @@ module.exports = {
   ////POST A CREATOR SERIES////////////////////////////////////////////////
   postCreateSeries: async(req, res, next) => {
  
-    const seriesDateCreated = formatedNewDate();
     const strTags = req.value.body.tags;
     const tags = strTags.split(",");
     const seriesCover = req.files.seriesCover[0].path;
@@ -64,7 +61,6 @@ module.exports = {
     if(seriesTitle) seriesFields.seriesTitle = seriesTitle;
     if(seriesCover) seriesFields.seriesCover = seriesCover;
     if(seriesBanner) seriesFields.seriesBanner = seriesBanner;
-    if(seriesDateCreated) seriesFields.seriesDateCreated = seriesDateCreated;
     if(seriesUrl) seriesFields.seriesUrl = seriesUrl;
     if(genrePrimary) seriesFields.genrePrimary = genrePrimary;
     if(genreSecondary) seriesFields.genreSecondary = genreSecondary;
@@ -88,19 +84,22 @@ module.exports = {
         }
       }
 
-      let profile = await Profile.findOneAndUpdate(
+      await Profile.findOneAndUpdate(
         {user: req.user.id},
         {$push: {seriesMade:{
           seriesTitle,
           seriesCover,
           genrePrimary,
           seriesUrl,
+          user:  req.user.id,
         }}},
         {new: true}
       );
       
       series = new Series(seriesFields);
+
       await series.save();
+
       res.json(series);
 
     } catch (error) {
@@ -130,9 +129,6 @@ module.exports = {
     const genreType = req.query.genreType
     var findParam = {};
     var sortParam = {};
-
-    console.log("SeriesTitle",seriesTitle)
-
     
     if(filtertype === "Genre"){
       findParam = {genrePrimary: genreType};
@@ -154,8 +150,15 @@ module.exports = {
         .limit(parseInt(req.query.limit))
         .sort(sortParam);
       
-      const countDocuments = await Series.find();
-      let dataLength = countDocuments.length;
+      let dataLength = 0;
+
+      if(filtertype === "Genre"){
+        const countDocuments = await Series.find(findParam);
+        dataLength = countDocuments.length;
+      } else {       
+        const countDocuments = await Series.find();
+        dataLength = countDocuments.length;
+      }
       
       if(!seriesList) {
         return res.status(400).json({msg: 'No Series Found'})
@@ -168,5 +171,32 @@ module.exports = {
     }
   },
 
+   ////GET A SINGLE SERIES(FOR COMICS SECTION)/////////////////////////////////////
+   getSeriesComics: async(req, res, next) => {
+    
+    try {
+      const series = await Series.findOne({_id:req.query.seriesId});
+      const chapters = await Chapters.find({seriesId:req.query.seriesId});
+      const creator = await Profile.findOne({user:req.query.userId})
+      .select(
+        '-isCreator -tools -user -__v -city -updatedAt -createdAt -likes -description -seriesMade'
+      );
+
+
+      if(!chapters) {
+        return res.status(400).json({msg: 'No Chapters Found'})
+      }
+
+      const data = {series,creator,chapters};
+
+      return res.json(data);
+
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  },
+
 
 }
+
+

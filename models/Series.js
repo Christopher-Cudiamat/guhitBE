@@ -21,9 +21,6 @@ const SeriesSchema = new mongoose.Schema({
   seriesUrl: {
     type: String,
   },
-  seriesDateCreated: {
-    type: String,
-  },
   genrePrimary: {
     type: String,
   },

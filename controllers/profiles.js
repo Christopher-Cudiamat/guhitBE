@@ -4,12 +4,9 @@ const User = require('../models/User');
 const Series = require('../models/Series');
 const gravatar = require('gravatar');
 
-const {formatedNewDate} = require('../helpers/dateFormat');
-
 module.exports = {
 
-  ////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////
+
   ////GET PROFILE////////////////////////////////////////////////
   getProfile: async(req, res, next) => {
     console.log("req.user.id",req.user.id)
@@ -27,13 +24,8 @@ module.exports = {
     }
   },
 
-
-  ////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////
   ////POST CREATE PROFILE AFTER SIGN UP////////////////////////////////////////////////
   postInitProfile: async(req, res, next) => {
-    console.log("REQ_______",req.body);
-    console.log("RES_______",res);
     const avatar = gravatar.url(req.email,{
       s: '200',
       r: 'pg',
@@ -64,8 +56,6 @@ module.exports = {
   },
 
 
-  ////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////
   ////POST CREATE PROFILE FOR PUBLISHERS OR CREATOR///////////////
   postProfile: async(req, res, next) => {
     const isCreator = true
@@ -82,13 +72,10 @@ module.exports = {
 
     } = req.value.body;
 
-    //Buidle profileFields
     const profileFields = {};
 
     profileFields.user = req.user.id;
     profileFields.seriesMade = [];
-    //SOLVE THIS
-    
 
     if(profilePic) profileFields.profilePic = profilePic;
     if(displayName) profileFields.displayName = displayName;
@@ -99,9 +86,8 @@ module.exports = {
     
     //This is for testing only to be changed with real values later..
     if(likes) profileFields.likes = likes;
-    if(tools) {
-      profileFields.tools = tools.toString().split(',').map(tool => tool.trim());
-    }
+    if(tools) profileFields.tools = tools.toString().split(',').map(tool => tool.trim());
+    
   
 
     try {

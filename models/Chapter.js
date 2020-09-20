@@ -18,13 +18,6 @@ const ChaptersSchema = new mongoose.Schema({
   chapterTitle: {
     type: String,
   },
-  chapterDateCreated: {
-    type: String, 
-  },
-  chapterDateUpdated: {
-    type: String, 
-    default: ""
-  },
   chapterNumber: {
     type: Number,
     default: 1
