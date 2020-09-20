@@ -113,7 +113,13 @@ module.exports = {
     try {
       await Series.findOneAndRemove({user: req.user.id,_id:req.query.id});
       await Chapters.deleteMany({user: req.user.id,seriesId:req.query.id});
-   
+
+      await Profile.update(
+        { user: req.user.id },
+        { $pull: { seriesMade:{ seriesTitle: req.query.seriesTitle }}},
+        { multi: true }
+      );
+
       res.json({msg: 'series is deleted'});
     } catch (error) {
   

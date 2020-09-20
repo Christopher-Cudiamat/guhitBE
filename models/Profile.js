@@ -32,14 +32,9 @@ const ProfileSchema = new mongoose.Schema({
   tools: {
     type: [String]
   },
-  isCreator:{
-    type: Boolean,
-    default:false
-  },
   seriesMade:{
     type: [Object]
-  }
- 
+  },
 },{
   timestamps: true
 });

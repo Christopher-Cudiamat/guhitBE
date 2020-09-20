@@ -1,6 +1,5 @@
 
 const Profile = require('../models/Profile');
-const User = require('../models/User');
 const Series = require('../models/Series');
 const gravatar = require('gravatar');
 
@@ -9,7 +8,7 @@ module.exports = {
 
   ////GET PROFILE////////////////////////////////////////////////
   getProfile: async(req, res, next) => {
-    console.log("req.user.id",req.user.id)
+
     try {
       const profile = await Profile.findOne({user: req.user.id}).populate('user',['email']);
 
@@ -57,7 +56,7 @@ module.exports = {
 
 
   ////POST CREATE PROFILE FOR PUBLISHERS OR CREATOR///////////////
-  postProfile: async(req, res, next) => {
+  postProfile: async(req, res) => {
     const isCreator = true
     const profilePic = req.file.path;
     const strTools = req.value.body.tools;
@@ -69,7 +68,6 @@ module.exports = {
       city,
       description,
       patreon,
-
     } = req.value.body;
 
     const profileFields = {};
@@ -84,18 +82,14 @@ module.exports = {
     if(isCreator) profileFields.isCreator = isCreator;
     if(patreon) profileFields.patreon = patreon;
     
-    //This is for testing only to be changed with real values later..
+    //likes is for testing only to be changed with real values later..
     if(likes) profileFields.likes = likes;
     if(tools) profileFields.tools = tools.toString().split(',').map(tool => tool.trim());
     
-  
-
     try {
 
-      //LOOK FOR ONE
       let profile = await Profile.findOne({user: req.user.id});
       
-      //UPDATE IF FOUND ONE
       if(profile) {
         let profile = await Profile.findOneAndUpdate(
           {user: req.user.id},
@@ -114,8 +108,7 @@ module.exports = {
       res.json(profile);
 
     } catch (error) {
-      console.log(error)
-      res.status(500).send('Server Error')
+      res.status(500).send('Server Error');
     }
   }
 
