@@ -21,8 +21,6 @@ const upload = multer({storage: storage, limits:{
 
 
 
-
-
 //@route   GET api/profiles/me
 //@desc    get a user profile
 //@access  Private
@@ -32,6 +30,14 @@ router.get(
   ProfilesController.getProfile
 );
 
+//@route   POST api/profiles/me
+//@desc    create a initial default user profile
+//@access  Private
+router.post(
+  '/init',
+  passport.authenticate('jwt',{session:false}),
+  ProfilesController.postInitProfile
+);
 
 //@route   POST api/profiles/me
 //@desc    update or create a user profile
@@ -45,19 +51,15 @@ router.post(
 );
 
 //@route   POST api/profiles/me
-//@desc    update or create a user profile
+//@desc    update ser profile
 //@access  Private
 router.post(
-  '/',
+  '/update',
+  upload.single('profilePic'),
+  validateBody(schemas.profileSchema),
   passport.authenticate('jwt',{session:false}),
-  ProfilesController.postProfile
+  ProfilesController.updateProfile
 );
 
-
-router.post(
-  '/init',
-  passport.authenticate('jwt',{session:false}),
-  ProfilesController.postInitProfile
-);
 
 module.exports = router; 

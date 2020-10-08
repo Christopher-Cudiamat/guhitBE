@@ -42,7 +42,7 @@ const SeriesSchema = new mongoose.Schema({
     default: false
   },
   likes:{
-    type: Number, 
+    type: [Object], 
   },
 },{
   timestamps: true

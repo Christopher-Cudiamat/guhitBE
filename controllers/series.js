@@ -44,7 +44,8 @@ module.exports = {
     const seriesBanner = req.files.seriesBanner[0].path;
     const condition = req.value.body.condition === "true" ? true:false;
     const consent = req.value.body.consent === "true" ? true:false;
-    const likes = Math.floor(Math.random() * 1000) + 1;
+    // const likes = Math.floor(Math.random() * 1000) + 1;
+    const likes = [];
 
     const {
       seriesTitle,
@@ -93,9 +94,9 @@ module.exports = {
           seriesUrl,
           user:  req.user.id,
         }}},
-        {new: true}
+        {new: true} 
       );
-      
+
       series = new Series(seriesFields);
 
       await series.save();
@@ -196,6 +197,46 @@ module.exports = {
       const data = {series,creator,chapters};
 
       return res.json(data);
+
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  },
+
+  ////GET A SINGLE SERIES(FOR COMICS SECTION)/////////////////////////////////////
+  postUpdateLike: async(req, res) => {
+    const seriesId = req.body.seriesId;
+    const seriesUserId = req.body.seriesUserId;
+    console.log(seriesUserId);
+
+    try {
+
+      await Series.update(
+        { 
+          _id: seriesId ,
+          'likes.likersUserId': {$ne: req.user.id}
+        },
+        { $push: { likes:{ likersUserId:  req.user.id }}},
+        { new: true }
+      );
+
+      await Profile.update(
+        { 
+          user: seriesUserId,
+          'likes.likersUserId': {$ne: req.user.id},
+          'likes.seriesLikedId': {$ne: seriesId},
+        },
+        { $push: { 
+          likes:{ 
+              likersUserId:  req.user.id,
+              seriesLikedId: seriesId 
+            }
+          }
+        },
+        { new: true }
+      );
+
+      return res.end()
 
     } catch (error) {
       res.status(500).send('Server Error');

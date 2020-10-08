@@ -20,7 +20,7 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
   },
   likes:{
-    type: Number, 
+    type: [Object], 
   },
   isCreator:{
     type: Boolean,

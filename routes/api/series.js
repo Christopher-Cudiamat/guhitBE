@@ -84,5 +84,15 @@ router.get(
   SeriesController.getSeriesComics
 );
 
+//@route   POST api/series/comics
+//@desc    add likes
+//@access  Private
+router.post(
+  '/like',
+  passport.authenticate('jwt',{session:false}),
+  SeriesController.postUpdateLike
+);
+
+
 
 module.exports = router;

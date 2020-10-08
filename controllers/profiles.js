@@ -61,7 +61,8 @@ module.exports = {
     const profilePic = req.file.path;
     const strTools = req.value.body.tools;
     const tools = strTools.split(",");
-    const likes = Math.floor(Math.random() * 1000) + 1;
+    // const likes = Math.floor(Math.random() * 1000) + 1;
+    const likes = [];
 
     const {
       displayName,
@@ -110,8 +111,50 @@ module.exports = {
     } catch (error) {
       res.status(500).send('Server Error');
     }
-  }
+  },
 
 
+  updateProfile: async(req, res) => {
+
+    const profilePic = req.file.path;
+    const strTools = req.value.body.tools;
+    const tools = strTools.split(",");
+
+    const {
+      displayName,
+      city,
+      description,
+      patreon,
+    } = req.value.body;
+
+    const profileFields = {};
+
+    profileFields.user = req.user.id;
+
+    if(profilePic) profileFields.profilePic = profilePic;
+    if(displayName) profileFields.displayName = displayName;
+    if(city) profileFields.city = city;
+    if(description) profileFields.description = description;
+    if(patreon) profileFields.patreon = patreon;
+    if(tools) profileFields.tools = tools.toString().split(',').map(tool => tool.trim());
+    
+    try {
+
+      let profile = await Profile.findOne({user: req.user.id});
+      
+      if(profile) {
+        let profile = await Profile.findOneAndUpdate(
+          {user: req.user.id},
+          {$set: profileFields},
+          {new: true}
+        );
+
+        return res.json(profile);
+      }
+
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  },
 
 }
