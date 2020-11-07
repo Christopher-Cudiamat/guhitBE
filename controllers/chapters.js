@@ -2,15 +2,13 @@ const Chapter = require('../models/Chapter');
 
 module.exports = {
 
-  ////GET ALL MY SERIES////////////////////////////////////////////////
+  ////GET ALL CREATOR CHAPTER////////////////////////////////////////////////
   getAllMyChapters: async(req, res, next) => {
     try {
       
       const chapter = await Chapter.find({user: req.user.id, seriesId:req.query.id}).populate('user',['email']);
 
-      if(!chapter) {
-        return res.status(400).json({msg: 'There is no series created by this user'})
-      }
+      if(!chapter) res.status(400).json({msg: 'There is no series created by this user'});
 
       res.json(chapter);
     } catch (error) {
@@ -20,14 +18,12 @@ module.exports = {
   },
 
 
-  ////GET ALL USERS CHAPTERS////////////////////////////////////////////////
+  ////GET A CREATOR'S SPECIEFIC CHAPTE////////////////////////////////////////////////
   getMyChapter: async(req, res, next) => {
     try {
       const chapter = await Chapter.findOne({user: req.user.id,_id:req.query.id});
 
-      if(!chapter) {
-        return res.status(400).json({msg: 'There is no series created by this user'})
-      }
+      if(!chapter) res.status(400).json({msg: 'There is no series created by this user'});
 
       res.json(chapter);
     } catch (error) {
@@ -36,11 +32,7 @@ module.exports = {
     }
   },
 
-
-
-  
-  ////////////////////////////////////////////////////////////////
-  ////POST MY SERIES////////////////////////////////////////////////
+  ////PUBLISH A CHAPTER////////////////////////////////////////////////
   postCreateChapter: async(req, res, next) => {
 
     const seriesId= req.value.body.seriesId;
@@ -90,7 +82,7 @@ module.exports = {
     }
   },
 
-  ////DELETE A SPECIEFIC SERIES////////////////////////////////////////////////
+  ////DELETE A SPECIEFIC CHAPTER////////////////////////////////////////////////
   deleteChapter: async(req, res, next) => {
     try {
       await Chapter.findOneAndRemove({user: req.user.id,_id:req.query.id});
@@ -101,13 +93,12 @@ module.exports = {
     }
   },
 
+
+  ////GET A SPECIEFIC CHAPTER////////////////////////////////////////////////
   getChapterComics: async(req, res, next) => {
-    console.log("req.query.chapterId", req.query.chapterId);
-    console.log("req.query.chapterId",typeof req.query.chapterId);
     try {
 
       const chapter = await Chapter.findOne({_id: req.query.chapterId});
-      console.log("Chapter",chapter);
 
       if(!chapter) {
         return res.status(400).json({msg: 'No Chapter Found'})

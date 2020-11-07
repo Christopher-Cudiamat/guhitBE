@@ -37,6 +37,8 @@ module.exports = {
 
   ////POST A CREATOR SERIES////////////////////////////////////////////////
   postCreateSeries: async(req, res, next) => {
+
+    console.log("req.value.body.isNewSeries", req.value.body.isNewSeries)
  
     const strTags = req.value.body.tags;
     const tags = strTags.split(",");
@@ -85,6 +87,8 @@ module.exports = {
         }
       }
 
+      series = new Series(seriesFields);
+
       await Profile.findOneAndUpdate(
         {user: req.user.id},
         {$push: {seriesMade:{
@@ -92,12 +96,13 @@ module.exports = {
           seriesCover,
           genrePrimary,
           seriesUrl,
+          seriesId: series._id,
           user:  req.user.id,
         }}},
         {new: true} 
       );
 
-      series = new Series(seriesFields);
+      // console.log("series-------",series);
 
       await series.save();
 

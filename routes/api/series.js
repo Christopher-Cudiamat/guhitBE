@@ -11,8 +11,10 @@ const storage = multer.diskStorage({
     cb(null, "./uploads/series");
   },
   filename: function(req,file,cb){
-   
-    cb(null,`${req.body.seriesTitle}-${file.originalname}`);
+    let seriesTitle = req.body.seriesTitle.replace(/ /g, '');
+    let originalName = file.originalname.replace(/ /g, '');
+    console.log("NAMMMMMEEEE--", `${seriesTitle}-${originalName}`);
+    cb(null,`${seriesTitle}-${originalName}`);
   }
 });
 const upload = multer({storage: storage, limits:{
