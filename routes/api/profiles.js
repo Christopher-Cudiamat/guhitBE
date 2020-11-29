@@ -10,6 +10,7 @@ const storage = multer.diskStorage({
   },
   filename: function(req,file,cb){
     // cb(null, Date.now() + file.originalname);
+    console.log("REQ===================", req.body)
     cb(null, Date.now() + file.originalname);
   }
 });
@@ -39,7 +40,7 @@ router.post(
   ProfilesController.postInitProfile
 );
 
-//@route   POST api/profiles/me
+//@route   POST api/profiles/
 //@desc    update or create a user profile
 //@access  Private
 router.post(
@@ -50,7 +51,7 @@ router.post(
   ProfilesController.postProfile
 );
 
-//@route   POST api/profiles/me
+//@route   POST api/profiles/update
 //@desc    update ser profile
 //@access  Private
 router.post(
